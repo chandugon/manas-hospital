@@ -1,0 +1,521 @@
+ <!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doctor Portal - Manas Hospital</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <style>
+
+        /* Glass card */
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Calendar */
+
+        .fc {
+            font-family: inherit;
+        }
+
+        .fc-toolbar-title {
+            font-weight: 700 !important;
+            color: #115e59;
+        }
+
+        .fc-button {
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+        }
+
+        .fc-event {
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 4px 6px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .fc-event:hover {
+            transform: scale(1.02);
+            transition: 0.2s;
+        }
+
+    </style>
+
+</head>
+
+
+<body class="min-h-screen bg-gray-100 bg-cover bg-center bg-fixed"
+      style="background-image: url('https://plus.unsplash.com/premium_photo-1723662018915-0e3660ce8288?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1lfHx8fGVufDB8fHx8fA%3D%3D');">
+
+
+    <!-- Background Overlay -->
+
+    <div class="fixed inset-0 bg-black/20 pointer-events-none"></div>
+
+
+    <!-- Main Content -->
+
+    <div class="relative z-10 min-h-screen">
+
+
+        <!-- Navbar -->
+
+        <nav class="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50">
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="flex justify-between items-center h-16">
+
+
+                    <!-- Doctor Information -->
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-gradient-to-br from-teal-500 to-cyan-600
+                                    flex items-center justify-center
+                                    shadow-md">
+
+                            <i class="fas fa-user-doctor text-white"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h1 class="text-xl font-bold text-teal-700">
+
+                                Doctor Portal
+
+                            </h1>
+
+                            <p class="text-xs text-gray-500"
+                               th:text="${doctor.name}">
+
+                                Dr. Sarah
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Logout -->
+
+                    <form th:action="@{/logout}"
+                          method="post"
+                          class="inline">
+
+                        <button
+                                type="submit"
+                                class="flex items-center gap-2
+                                       text-red-600 hover:text-red-700
+                                       font-medium transition">
+
+                            <i class="fas fa-sign-out-alt"></i>
+
+                            <span class="hidden sm:inline">
+                                Logout
+                            </span>
+
+                        </button>
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- Main Content -->
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
+            <!-- Welcome Header -->
+
+            <div class="glass-card rounded-2xl shadow-xl p-6 mb-6">
+
+                <div class="flex flex-col sm:flex-row
+                            sm:items-center sm:justify-between gap-4">
+
+                    <div>
+
+                        <div class="flex items-center gap-3 mb-2">
+
+                            <div class="w-12 h-12 rounded-xl
+                                        bg-teal-100
+                                        flex items-center justify-center">
+
+                                <i class="fas fa-stethoscope
+                                          text-teal-600 text-xl"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2 class="text-2xl font-bold text-gray-800">
+
+                                    Welcome,
+
+                                    <span th:text="${doctor.name}">
+                                        Doctor
+                                    </span>
+
+                                </h2>
+
+                                <p class="text-gray-500 text-sm">
+
+                                    Manage your patients and daily schedule
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Today's Date -->
+
+                    <div class="bg-teal-50 rounded-xl px-5 py-3">
+
+                        <p class="text-xs text-teal-600 font-medium">
+                            TODAY
+                        </p>
+
+                        <p class="text-lg font-bold text-teal-800"
+                           id="todayDate">
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Dashboard Cards -->
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+
+                <!-- Today's Patients -->
+
+                <div class="glass-card rounded-2xl shadow-xl p-6">
+
+                    <div class="flex items-center justify-between mb-6">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-11 h-11 rounded-xl
+                                        bg-blue-100
+                                        flex items-center justify-center">
+
+                                <i class="fas fa-users
+                                          text-blue-600 text-lg"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-xl font-bold text-gray-800">
+
+                                    Today's Patients
+
+                                </h3>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Your appointments for today
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Patient List -->
+
+                    <div th:if="${todayAppointments == null or #lists.isEmpty(todayAppointments)}"
+                         class="text-center py-10">
+
+                        <div class="w-16 h-16 mx-auto mb-4
+                                    rounded-full bg-gray-100
+                                    flex items-center justify-center">
+
+                            <i class="fas fa-calendar-check
+                                      text-gray-400 text-2xl"></i>
+
+                        </div>
+
+                        <p class="font-semibold text-gray-600">
+
+                            No appointments today
+
+                        </p>
+
+                        <p class="text-sm text-gray-400 mt-1">
+
+                            Your schedule is clear.
+
+                        </p>
+
+                    </div>
+
+
+                    <div th:each="apt : ${todayAppointments}"
+                         class="mb-4 p-4
+                                bg-gradient-to-r from-blue-50 to-indigo-50
+                                border border-blue-100
+                                rounded-xl
+                                hover:shadow-md
+                                transition">
+
+
+                        <div class="flex items-center justify-between gap-3">
+
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="w-10 h-10 rounded-full
+                                            bg-blue-100
+                                            flex items-center justify-center">
+
+                                    <i class="fas fa-user
+                                              text-blue-600"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="font-semibold text-gray-800"
+                                       th:text="${apt.patient.name}">
+
+                                        John
+
+                                    </p>
+
+                                    <p class="text-sm text-gray-500">
+
+                                        Patient
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="text-right">
+
+                                <p class="font-semibold text-indigo-700">
+
+                                    <i class="fas fa-clock mr-1"></i>
+
+                                    <span th:text="${#temporals.format(apt.startTime, 'hh:mm a')}">
+
+                                        10:30 AM
+
+                                    </span>
+
+                                </p>
+
+                                <span class="text-xs
+                                             bg-blue-100
+                                             text-blue-700
+                                             px-2 py-1
+                                             rounded-full">
+
+                                    Scheduled
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- My Schedule -->
+
+                <div class="glass-card rounded-2xl shadow-xl p-6">
+
+                    <div class="flex items-center justify-between mb-6">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-11 h-11 rounded-xl
+                                        bg-teal-100
+                                        flex items-center justify-center">
+
+                                <i class="fas fa-calendar-days
+                                          text-teal-600 text-lg"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-xl font-bold text-gray-800">
+
+                                    My Schedule
+
+                                </h3>
+
+                                <p class="text-sm text-gray-500">
+
+                                    Weekly appointment schedule
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="calendar"></div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Footer -->
+
+            <div class="text-center mt-8 pb-4">
+
+                <p class="text-white/90 text-sm">
+
+                    <i class="fas fa-heart text-red-400"></i>
+
+                    Made with care for better healthcare
+
+                    <span class="mx-1">•</span>
+
+                    <span class="font-semibold">
+                        Manas Hospital
+                    </span>
+
+                </p>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- Calendar Script -->
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            /* Today's date */
+
+            const todayDate = document.getElementById('todayDate');
+
+            const today = new Date();
+
+            todayDate.textContent = today.toLocaleDateString(
+                'en-IN',
+                {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }
+            );
+
+
+            /* FullCalendar */
+
+            const calendarEl =
+                document.getElementById('calendar');
+
+
+            const calendar =
+                new FullCalendar.Calendar(calendarEl, {
+
+                    initialView: 'timeGridWeek',
+
+                    headerToolbar: {
+
+                        left: 'prev,next today',
+
+                        center: 'title',
+
+                        right: 'timeGridWeek,dayGridMonth,listWeek'
+
+                    },
+
+                    events: '/appointment/doctor/events',
+
+                    height: 'auto',
+
+                    nowIndicator: true,
+
+                    slotMinTime: '08:00:00',
+
+                    slotMaxTime: '20:00:00',
+
+                    allDaySlot: false,
+
+                    eventColor: '#0d9488',
+
+                    eventTextColor: '#ffffff',
+
+                    eventDidMount: function(info) {
+
+                        info.el.setAttribute(
+                            'title',
+                            info.event.title
+                        );
+
+                    }
+
+                });
+
+
+            calendar.render();
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

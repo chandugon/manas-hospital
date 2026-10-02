@@ -1,0 +1,893 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manas Hospital - Login</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           BACKGROUND
+        ========================================= */
+
+        .background {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(2, 30, 50, 0.88),
+                    rgba(8, 47, 73, 0.72),
+                    rgba(15, 23, 42, 0.82)
+                ),
+                url('https://plus.unsplash.com/premium_photo-1764691400654-cde59d1d6294?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1lfHx8fGVufDB8fHx8fA%3D%3D');
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* =========================================
+           ANIMATED BACKGROUND BLOBS
+        ========================================= */
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.35;
+            animation: floatBlob 10s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 300px;
+            height: 300px;
+            background: #06b6d4;
+            top: -100px;
+            left: -80px;
+        }
+
+        .blob-2 {
+            width: 350px;
+            height: 350px;
+            background: #2563eb;
+            right: -120px;
+            bottom: -120px;
+            animation-delay: 2s;
+        }
+
+        .blob-3 {
+            width: 180px;
+            height: 180px;
+            background: #14b8a6;
+            right: 15%;
+            top: 15%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatBlob {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(25px, -25px) scale(1.08);
+            }
+        }
+
+        /* =========================================
+           FLOATING MEDICAL ICONS
+        ========================================= */
+
+        .medical-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.13);
+            animation: floatingIcon 7s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .medical-icon:nth-child(1) {
+            top: 15%;
+            left: 10%;
+            font-size: 50px;
+        }
+
+        .medical-icon:nth-child(2) {
+            top: 70%;
+            left: 7%;
+            font-size: 35px;
+            animation-delay: 2s;
+        }
+
+        .medical-icon:nth-child(3) {
+            top: 20%;
+            right: 9%;
+            font-size: 45px;
+            animation-delay: 1s;
+        }
+
+        .medical-icon:nth-child(4) {
+            bottom: 12%;
+            right: 12%;
+            font-size: 55px;
+            animation-delay: 3s;
+        }
+
+        @keyframes floatingIcon {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(5deg);
+            }
+        }
+
+        /* =========================================
+           LOGIN CARD
+        ========================================= */
+
+        .login-card {
+            animation: cardEntrance 0.9s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        @keyframes cardEntrance {
+
+            from {
+                opacity: 0;
+                transform: translateY(35px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.35),
+                0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================================
+           LOGO ANIMATION
+        ========================================= */
+
+        .logo-box {
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+            }
+
+            50% {
+                transform: translateY(-5px);
+                box-shadow: 0 18px 40px rgba(37, 99, 235, 0.38);
+            }
+        }
+
+        .cross {
+            position: relative;
+            width: 32px;
+            height: 32px;
+        }
+
+        .cross::before,
+        .cross::after {
+            content: "";
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .cross::before {
+            width: 10px;
+            height: 32px;
+            left: 11px;
+            top: 0;
+        }
+
+        .cross::after {
+            width: 32px;
+            height: 10px;
+            left: 0;
+            top: 11px;
+        }
+
+        /* =========================================
+           INPUT EFFECTS
+        ========================================= */
+
+        .input-wrapper {
+            transition: transform 0.25s ease;
+        }
+
+        .input-wrapper:focus-within {
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .input-field:focus {
+            background: white;
+            border-color: #2563eb;
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, 0.10),
+                0 8px 25px rgba(37, 99, 235, 0.08);
+        }
+
+        /* =========================================
+           LOGIN BUTTON
+        ========================================= */
+
+        .login-button {
+            position: relative;
+            overflow: hidden;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 15px 30px rgba(37, 99, 235, 0.28);
+        }
+
+        .login-button:active {
+            transform: scale(0.98);
+        }
+
+        .login-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.30),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.7s ease;
+        }
+
+        .login-button:hover::before {
+            left: 140%;
+        }
+
+        /* =========================================
+           STATUS DOT
+        ========================================= */
+
+        .status-dot {
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 7px rgba(34, 197, 94, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        /* =========================================
+           SHIELD
+        ========================================= */
+
+        .security-icon {
+            animation: securityFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes securityFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        /* =========================================
+           ERROR
+        ========================================= */
+
+        .error-box {
+            animation: errorShake 0.4s ease;
+        }
+
+        @keyframes errorShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 640px) {
+
+            .blob {
+                filter: blur(45px);
+            }
+
+            .medical-icon {
+                display: none;
+            }
+
+            .background {
+                background-attachment: scroll;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body class="background min-h-screen flex items-center justify-center p-4 relative">
+
+
+    <!-- =========================================
+         ANIMATED BACKGROUND
+    ========================================= -->
+
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+
+        <i class="medical-icon fas fa-heart-pulse"></i>
+        <i class="medical-icon fas fa-stethoscope"></i>
+        <i class="medical-icon fas fa-syringe"></i>
+        <i class="medical-icon fas fa-hospital"></i>
+
+    </div>
+
+
+    <!-- =========================================
+         LOGIN CARD
+    ========================================= -->
+
+    <div
+        class="login-card relative w-full max-w-md glass-card rounded-[28px] overflow-hidden border border-white/60"
+    >
+
+        <!-- Top Accent -->
+        <div
+            class="h-1.5 bg-gradient-to-r from-blue-700 via-cyan-500 to-teal-400"
+        ></div>
+
+
+        <div class="px-7 py-8 sm:px-9 sm:py-9">
+
+
+            <!-- =========================================
+                 LOGO
+            ========================================= -->
+
+            <div class="flex justify-center mb-5">
+
+                <div
+                    class="logo-box w-20 h-20 rounded-[22px]
+                           bg-gradient-to-br from-blue-700 via-indigo-600 to-cyan-500
+                           flex items-center justify-center
+                           text-white"
+                >
+
+                    <div class="cross"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 HOSPITAL NAME
+            ========================================= -->
+
+            <div class="text-center">
+
+                <h1
+                    class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-800"
+                >
+                    Manas
+                    <span class="text-blue-700">
+                        Hospital
+                    </span>
+                </h1>
+
+                <p class="text-gray-500 text-sm mt-2">
+                    Healthcare Management Portal
+                </p>
+
+            </div>
+
+
+            <!-- =========================================
+                 SECURE BADGE
+            ========================================= -->
+
+            <div class="flex justify-center mt-5">
+
+                <div
+                    class="inline-flex items-center gap-2
+                           px-4 py-2
+                           rounded-full
+                           bg-blue-50
+                           border border-blue-100"
+                >
+
+                    <span
+                        class="status-dot w-2.5 h-2.5 rounded-full bg-green-500"
+                    ></span>
+
+                    <span
+                        class="text-xs font-bold text-blue-700"
+                    >
+                        Secure Hospital Portal
+                    </span>
+
+                    <i
+                        class="security-icon fas fa-shield-halved
+                               text-blue-500 text-xs"
+                    ></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 DIVIDER
+            ========================================= -->
+
+            <div class="flex items-center gap-3 my-7">
+
+                <div class="h-px bg-gray-200 flex-1"></div>
+
+                <span
+                    class="text-[11px] text-gray-400 font-bold tracking-[0.2em]"
+                >
+                    SIGN IN
+                </span>
+
+                <div class="h-px bg-gray-200 flex-1"></div>
+
+            </div>
+
+
+            <!-- =========================================
+                 LOGIN FORM
+            ========================================= -->
+
+            <form
+                th:action="@{/login}"
+                method="post"
+                class="space-y-5"
+                id="loginForm"
+            >
+
+
+                <!-- =====================================
+                     EMAIL
+                ====================================== -->
+
+                <div>
+
+                    <label
+                        class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper relative">
+
+                        <div
+                            class="absolute inset-y-0 left-0 pl-4
+                                   flex items-center pointer-events-none"
+                        >
+
+                            <i
+                                class="fas fa-envelope text-gray-400"
+                            ></i>
+
+                        </div>
+
+
+                        <input
+                            type="email"
+                            name="username"
+                            required
+                            autocomplete="email"
+                            class="input-field block w-full
+                                   pl-12 pr-4 py-3.5
+                                   border border-gray-200
+                                   rounded-xl
+                                   bg-gray-50
+                                   text-gray-800
+                                   placeholder-gray-400
+                                   outline-none"
+                            placeholder="Enter your email"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================
+                     PASSWORD
+                ====================================== -->
+
+                <div>
+
+                    <label
+                        class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                        Password
+                    </label>
+
+                    <div class="input-wrapper relative">
+
+                        <div
+                            class="absolute inset-y-0 left-0 pl-4
+                                   flex items-center pointer-events-none"
+                        >
+
+                            <i
+                                class="fas fa-lock text-gray-400"
+                            ></i>
+
+                        </div>
+
+
+                        <input
+                            id="passwordInput"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="input-field block w-full
+                                   pl-12 pr-12 py-3.5
+                                   border border-gray-200
+                                   rounded-xl
+                                   bg-gray-50
+                                   text-gray-800
+                                   placeholder-gray-400
+                                   outline-none"
+                            placeholder="Enter your password"
+                        >
+
+
+                        <!-- Show Password -->
+
+                        <button
+                            type="button"
+                            onclick="togglePassword()"
+                            class="absolute right-0 top-0
+                                   h-full px-4
+                                   text-gray-400
+                                   hover:text-blue-600
+                                   transition"
+                            aria-label="Show password"
+                        >
+
+                            <i
+                                id="passwordIcon"
+                                class="fas fa-eye"
+                            ></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================
+                     LOGIN BUTTON
+                ====================================== -->
+
+                <button
+                    id="loginButton"
+                    type="submit"
+                    class="login-button w-full
+                           bg-gradient-to-r
+                           from-blue-700
+                           via-indigo-600
+                           to-cyan-500
+                           text-white
+                           font-bold
+                           py-3.5
+                           rounded-xl
+                           shadow-lg
+                           shadow-blue-700/20"
+                >
+
+                    <span
+                        id="buttonContent"
+                        class="flex items-center justify-center gap-2"
+                    >
+
+                        Login to Portal
+
+                        <i class="fas fa-arrow-right"></i>
+
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- =========================================
+                 ERROR MESSAGE
+            ========================================= -->
+
+            <div
+                th:if="${param.error}"
+                class="error-box mt-5 p-4
+                       bg-red-50
+                       border border-red-200
+                       text-red-700
+                       rounded-xl
+                       text-sm
+                       flex items-center gap-3"
+            >
+
+                <div
+                    class="w-9 h-9 rounded-lg
+                           bg-red-100
+                           flex items-center justify-center
+                           flex-shrink-0"
+                >
+
+                    <i class="fas fa-circle-exclamation"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="font-bold">
+                        Login failed
+                    </p>
+
+                    <p class="text-xs mt-0.5">
+                        Invalid email or password.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 REGISTER
+            ========================================= -->
+
+            <div
+                class="text-center
+                       mt-7
+                       pt-6
+                       border-t border-gray-100"
+            >
+
+                <p class="text-sm text-gray-500">
+
+                    New patient?
+
+                    <a
+                        href="/register"
+                        class="ml-1
+                               font-bold
+                               text-blue-700
+                               hover:text-indigo-700
+                               hover:underline
+                               transition"
+                    >
+                        Create an account
+                    </a>
+
+                </p>
+
+            </div>
+
+
+            <!-- =========================================
+                 SECURITY INFORMATION
+            ========================================= -->
+
+            <div
+                class="mt-6
+                       flex items-center justify-center gap-2
+                       text-[11px] text-gray-400"
+            >
+
+                <i class="fas fa-lock"></i>
+
+                <span>
+                    Your connection is protected
+                </span>
+
+                <span class="text-gray-300">•</span>
+
+                <i class="fas fa-shield-halved"></i>
+
+                <span>
+                    Secure Login
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 FOOTER
+            ========================================= -->
+
+            <div class="text-center mt-5">
+
+                <p class="text-xs text-gray-400">
+
+                    Made with
+
+                    <span class="text-red-500 mx-1">
+                        ♥
+                    </span>
+
+                    for better healthcare
+
+                </p>
+
+                <p
+                    class="text-[10px]
+                           text-gray-300
+                           mt-2
+                           tracking-widest
+                           uppercase"
+                >
+                    Manas Hospital • Secure Healthcare
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         PASSWORD TOGGLE + BUTTON ANIMATION
+    ========================================= -->
+
+    <script>
+
+        function togglePassword() {
+
+            const passwordInput =
+                document.getElementById("passwordInput");
+
+            const passwordIcon =
+                document.getElementById("passwordIcon");
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                passwordIcon.classList.remove("fa-eye");
+
+                passwordIcon.classList.add("fa-eye-slash");
+
+            } else {
+
+                passwordInput.type = "password";
+
+                passwordIcon.classList.remove("fa-eye-slash");
+
+                passwordIcon.classList.add("fa-eye");
+
+            }
+        }
+
+
+        /* Login button loading animation */
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", function () {
+
+                const button =
+                    document.getElementById("loginButton");
+
+                const content =
+                    document.getElementById("buttonContent");
+
+                button.disabled = true;
+
+                button.classList.add("opacity-90");
+
+                content.innerHTML = `
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                    Signing in...
+                `;
+
+            });
+
+    </script>
+
+
+</body>
+</html>

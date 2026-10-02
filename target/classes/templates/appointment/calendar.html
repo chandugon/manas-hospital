@@ -1,0 +1,375 @@
+ <!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Appointments - Manas Hospital</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+          rel="stylesheet"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        /* Calendar event styling */
+
+        .fc-event {
+            border: none !important;
+            padding: 4px 6px !important;
+            border-radius: 8px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .fc-event:hover {
+            transform: scale(1.03);
+            transition: 0.2s;
+        }
+
+        .fc-daygrid-event-dot {
+            display: none !important;
+        }
+
+        /* Calendar container */
+
+        .fc {
+            font-family: inherit;
+        }
+
+        .fc-toolbar-title {
+            font-weight: 700 !important;
+            color: #312e81;
+        }
+
+        .fc-button {
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+        }
+
+        /* Glass effect */
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+    </style>
+
+</head>
+
+
+<body class="min-h-screen bg-gray-100 bg-cover bg-center bg-fixed"
+      style="background-image: url('https://plus.unsplash.com/premium_photo-1661387600855-2794ffdd7705?q=80&w=1685&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1lfHx8fGVufDB8fHx8fA%3D%3D');">
+
+
+    <!-- Background Overlay -->
+
+    <div class="fixed inset-0 bg-black/20 pointer-events-none"></div>
+
+
+    <!-- Main Content -->
+
+    <div class="relative z-10 min-h-screen">
+
+
+        <!-- Navbar -->
+
+        <nav class="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50">
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div class="flex justify-between items-center h-16">
+
+
+                    <!-- Logo / Title -->
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600
+                                    flex items-center justify-center shadow-md">
+
+                            <i class="fas fa-calendar-check text-white"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h1 class="text-xl font-bold text-indigo-700">
+                                My Appointments
+                            </h1>
+
+                            <p class="text-xs text-gray-500">
+                                Manas Hospital
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Navigation -->
+
+                    <div class="flex gap-3 items-center">
+
+
+                        <a href="/appointment/book"
+                           class="hidden sm:flex items-center gap-2
+                                  bg-gradient-to-r from-indigo-600 to-purple-600
+                                  text-white px-4 py-2 rounded-full
+                                  font-medium shadow-md
+                                  hover:from-indigo-700 hover:to-purple-700
+                                  transition duration-200">
+
+                            <i class="fas fa-plus"></i>
+
+                            New Appointment
+
+                        </a>
+
+
+                        <!-- Mobile / Small button -->
+
+                        <a href="/appointment/book"
+                           class="sm:hidden w-10 h-10 rounded-full
+                                  bg-indigo-600 text-white
+                                  flex items-center justify-center
+                                  shadow-md hover:bg-indigo-700">
+
+                            <i class="fas fa-plus"></i>
+
+                        </a>
+
+
+                        <!-- Logout -->
+
+                        <form th:action="@{/logout}" method="post">
+
+                            <button
+                                    type="submit"
+                                    class="flex items-center gap-2
+                                           text-red-600 hover:text-red-700
+                                           font-medium transition">
+
+                                <i class="fas fa-sign-out-alt"></i>
+
+                                <span class="hidden sm:inline">
+                                    Logout
+                                </span>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- Page Content -->
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
+            <!-- Page Header -->
+
+            <div class="mb-6">
+
+                <div class="glass-card rounded-2xl shadow-lg p-6">
+
+                    <div class="flex flex-col sm:flex-row
+                                sm:items-center sm:justify-between gap-4">
+
+
+                        <div>
+
+                            <div class="flex items-center gap-3 mb-2">
+
+                                <div class="w-11 h-11 rounded-xl
+                                            bg-indigo-100
+                                            flex items-center justify-center">
+
+                                    <i class="fas fa-calendar-days
+                                              text-indigo-600 text-xl"></i>
+
+                                </div>
+
+                                <h2 class="text-2xl font-bold text-gray-800">
+
+                                    Appointment Calendar
+
+                                </h2>
+
+                            </div>
+
+                            <p class="text-gray-500">
+
+                                View and manage your scheduled appointments.
+
+                            </p>
+
+                        </div>
+
+
+                        <a href="/appointment/book"
+                           class="inline-flex items-center justify-center
+                                  gap-2
+                                  bg-indigo-600 text-white
+                                  px-5 py-3 rounded-xl
+                                  font-semibold shadow-md
+                                  hover:bg-indigo-700
+                                  transition">
+
+                            <i class="fas fa-calendar-plus"></i>
+
+                            Book Appointment
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Calendar -->
+
+            <div class="glass-card rounded-2xl shadow-2xl p-4 sm:p-6">
+
+                <div id="calendar"></div>
+
+            </div>
+
+
+            <!-- Footer -->
+
+            <div class="text-center mt-8 pb-4">
+
+                <p class="text-white/90 text-sm">
+
+                    <i class="fas fa-heart text-red-400"></i>
+
+                    Made with care for better healthcare
+
+                    <span class="mx-1">•</span>
+
+                    <span class="font-semibold">
+                        Manas Hospital
+                    </span>
+
+                </p>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- FullCalendar Script -->
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const calendarEl = document.getElementById('calendar');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+
+                initialView: 'dayGridMonth',
+
+                headerToolbar: {
+
+                    left: 'prev,next today',
+
+                    center: 'title',
+
+                    right: 'dayGridMonth,timeGridWeek,listWeek'
+
+                },
+
+                height: 'auto',
+
+                events: function (fetchInfo, successCallback, failureCallback) {
+
+                    fetch('/appointment/events')
+
+                        .then(res => res.json())
+
+                        .then(data => {
+
+                            const events = data.map(a => ({
+
+                                id: a.id,
+
+                                title: a.title,
+
+                                start: a.startTime,
+
+                                end: a.endTime,
+
+                                backgroundColor:
+                                    a.status === 'SCHEDULED'
+                                        ? '#4f46e5'
+                                        : a.status === 'COMPLETED'
+                                            ? '#16a34a'
+                                            : '#dc2626',
+
+                                borderColor: 'transparent'
+
+                            }));
+
+                            successCallback(events);
+
+                        })
+
+                        .catch(err => failureCallback(err));
+
+                },
+
+
+                eventDidMount: function(info) {
+
+                    const status =
+                        info.event.extendedProps.status || '';
+
+                    info.el.setAttribute(
+
+                        'title',
+
+                        `${info.event.title} \nStatus: ${status}`
+
+                    );
+
+                }
+
+            });
+
+            calendar.render();
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

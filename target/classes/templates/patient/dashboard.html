@@ -1,0 +1,1551 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Patient Portal - Manas Hospital</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FullCalendar -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css"
+        rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        /* =====================================================
+           GLASS EFFECT
+        ===================================================== */
+
+        .glass {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .glass-soft {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        /* =====================================================
+           PAGE ANIMATION
+        ===================================================== */
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: fadeIn 0.65s ease forwards;
+        }
+
+        .fade-delay-1 {
+            animation-delay: 0.08s;
+        }
+
+        .fade-delay-2 {
+            animation-delay: 0.16s;
+        }
+
+        .fade-delay-3 {
+            animation-delay: 0.24s;
+        }
+
+        .fade-delay-4 {
+            animation-delay: 0.32s;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =====================================================
+           CARD HOVER
+        ===================================================== */
+
+        .dashboard-card {
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.15);
+        }
+
+        /* =====================================================
+           STAT ICON
+        ===================================================== */
+
+        .stat-icon {
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.08) rotate(-4deg);
+        }
+
+        /* =====================================================
+           MAP
+        ===================================================== */
+
+        .map-card {
+            overflow: hidden;
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .map-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.18);
+        }
+
+        .map-frame {
+            width: 100%;
+            height: 390px;
+            border: 0;
+            display: block;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* =====================================================
+           LOCATION PULSE
+        ===================================================== */
+
+        .location-pulse {
+            animation: locationPulse 2.2s infinite;
+        }
+
+        @keyframes locationPulse {
+
+            0% {
+                box-shadow:
+                    0 0 0 0 rgba(13, 148, 136, 0.45);
+            }
+
+            70% {
+                box-shadow:
+                    0 0 0 15px rgba(13, 148, 136, 0);
+            }
+
+            100% {
+                box-shadow:
+                    0 0 0 0 rgba(13, 148, 136, 0);
+            }
+        }
+
+        /* =====================================================
+           MAP INFO
+        ===================================================== */
+
+        .map-info-card {
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .map-info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        /* =====================================================
+           DIRECTION BUTTON
+        ===================================================== */
+
+        .direction-btn {
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .direction-btn:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 14px 30px rgba(13, 148, 136, 0.28);
+        }
+
+        /* =====================================================
+           FLOATING LOCATION ICON
+        ===================================================== */
+
+        .floating-location {
+            animation: floatingLocation 3s ease-in-out infinite;
+        }
+
+        @keyframes floatingLocation {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* =====================================================
+           CALENDAR
+        ===================================================== */
+
+        .fc {
+            --fc-border-color: #e5e7eb;
+            --fc-button-bg-color: #4f46e5;
+            --fc-button-border-color: #4f46e5;
+            --fc-button-hover-bg-color: #4338ca;
+            --fc-button-hover-border-color: #4338ca;
+            --fc-button-active-bg-color: #3730a3;
+            --fc-button-active-border-color: #3730a3;
+            --fc-today-bg-color: #eef2ff;
+            --fc-page-bg-color: transparent;
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .fc .fc-button {
+            border-radius: 10px !important;
+            font-weight: 600;
+            box-shadow: none !important;
+        }
+
+        .fc .fc-daygrid-day-number {
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 640px) {
+
+            .map-frame {
+                height: 300px;
+            }
+
+            .map-overlay {
+                top: 12px;
+                left: 12px;
+            }
+
+            .fc .fc-toolbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .fc .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body
+    class="min-h-screen bg-slate-100 relative"
+    style="
+        background-image:
+            url('https://plus.unsplash.com/premium_photo-1706480229136-1a611442993a?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1lfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    "
+>
+
+
+<!-- =========================================================
+     BACKGROUND OVERLAY
+========================================================= -->
+
+<div
+    class="fixed inset-0 bg-slate-900/45 backdrop-blur-[1px]"
+></div>
+
+
+<!-- =========================================================
+     MAIN APP
+========================================================= -->
+
+<div class="relative z-10 min-h-screen">
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <nav
+        class="sticky top-0 z-50 glass shadow-xl border-b border-white/60"
+    >
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div
+                class="min-h-[76px] py-3 flex flex-col sm:flex-row
+                       justify-between items-center gap-4"
+            >
+
+                <!-- BRAND -->
+
+                <div class="flex items-center gap-3">
+
+                    <div
+                        class="w-12 h-12 rounded-2xl
+                               bg-gradient-to-br from-indigo-600 to-blue-500
+                               flex items-center justify-center
+                               shadow-lg"
+                    >
+
+                        <i
+                            class="fas fa-heart-pulse text-white text-xl"
+                        ></i>
+
+                    </div>
+
+                    <div>
+
+                        <h1
+                            class="text-xl sm:text-2xl font-extrabold
+                                   tracking-tight text-indigo-700"
+                        >
+                            My Health Portal
+                        </h1>
+
+                        <p
+                            class="text-xs sm:text-sm text-slate-500 font-medium"
+                            th:text="${patient.name}"
+                        >
+                            Patient
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NAVIGATION -->
+
+                <div class="flex items-center gap-2 sm:gap-3">
+
+                    <a
+                        href="/appointment/book"
+                        class="inline-flex items-center gap-2
+                               bg-gradient-to-r
+                               from-indigo-600 to-blue-600
+                               text-white px-4 sm:px-5 py-2.5
+                               rounded-xl text-sm font-bold
+                               shadow-lg
+                               hover:from-indigo-700
+                               hover:to-blue-700
+                               hover:-translate-y-0.5
+                               transition-all duration-300"
+                    >
+
+                        <i class="fas fa-calendar-plus"></i>
+
+                        <span class="hidden sm:inline">
+                            Book Appointment
+                        </span>
+
+                        <span class="sm:hidden">
+                            Book
+                        </span>
+
+                    </a>
+
+
+                    <form
+                        th:action="@{/logout}"
+                        method="post"
+                        class="inline"
+                    >
+
+                        <button
+                            type="submit"
+                            class="w-10 h-10 sm:w-auto sm:h-auto
+                                   sm:px-4 sm:py-2.5
+                                   rounded-xl
+                                   text-sm font-semibold
+                                   text-slate-700
+                                   bg-slate-100
+                                   hover:bg-red-50
+                                   hover:text-red-600
+                                   transition-all duration-300"
+                        >
+
+                            <i class="fas fa-right-from-bracket sm:mr-1"></i>
+
+                            <span class="hidden sm:inline">
+                                Logout
+                            </span>
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================================
+         DASHBOARD
+    ====================================================== -->
+
+    <main
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    >
+
+
+        <!-- =================================================
+             WELCOME
+        ================================================== -->
+
+        <section
+            class="glass rounded-3xl shadow-2xl
+                   border border-white/70
+                   p-6 sm:p-8 mb-8
+                   fade-in"
+        >
+
+            <div
+                class="flex flex-col lg:flex-row
+                       lg:items-center
+                       lg:justify-between
+                       gap-6"
+            >
+
+                <div class="flex items-start gap-4">
+
+                    <div
+                        class="hidden sm:flex
+                               w-16 h-16 rounded-2xl
+                               bg-gradient-to-br
+                               from-indigo-100 to-blue-100
+                               text-indigo-600
+                               items-center justify-center
+                               shadow-inner"
+                    >
+
+                        <i class="fas fa-user-circle text-3xl"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <p
+                            class="text-sm font-bold
+                                   text-indigo-600
+                                   uppercase tracking-wider"
+                        >
+                            Patient Dashboard
+                        </p>
+
+                        <h2
+                            class="text-2xl sm:text-3xl lg:text-4xl
+                                   font-extrabold
+                                   text-slate-800 mt-1"
+                        >
+
+                            Welcome back,
+
+                            <span th:text="${patient.name}">
+                                Patient
+                            </span>
+
+                        </h2>
+
+                        <p
+                            class="mt-2 text-slate-500
+                                   text-sm sm:text-base"
+                        >
+                            Manage your appointments and keep track
+                            of your healthcare journey.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HEALTH STATUS -->
+
+                <div
+                    class="flex items-center gap-3
+                           bg-emerald-50
+                           border border-emerald-100
+                           rounded-2xl
+                           px-5 py-4"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl
+                               bg-emerald-100
+                               text-emerald-600
+                               flex items-center justify-center"
+                    >
+
+                        <i class="fas fa-shield-heart"></i>
+
+                    </div>
+
+                    <div>
+
+                        <p
+                            class="text-xs font-bold
+                                   uppercase tracking-wider
+                                   text-emerald-600"
+                        >
+                            Healthcare Portal
+                        </p>
+
+                        <p
+                            class="text-sm font-semibold
+                                   text-slate-700 mt-0.5"
+                        >
+                            Your health, organized.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <section
+            class="grid grid-cols-1 md:grid-cols-3
+                   gap-5 mb-8"
+        >
+
+
+            <!-- UPCOMING -->
+
+            <div
+                class="stat-card dashboard-card
+                       glass rounded-2xl
+                       shadow-xl
+                       border border-white/70
+                       p-6 fade-in fade-delay-1"
+            >
+
+                <div
+                    class="flex items-center justify-between"
+                >
+
+                    <div>
+
+                        <p
+                            class="text-sm font-bold
+                                   text-slate-500
+                                   uppercase tracking-wide"
+                        >
+                            Upcoming
+                        </p>
+
+                        <p
+                            class="text-4xl font-extrabold
+                                   text-indigo-600 mt-3"
+                            th:text="${upcomingCount ?: 0}"
+                        >
+                            0
+                        </p>
+
+                        <p
+                            class="text-sm text-slate-500 mt-1"
+                        >
+                            Scheduled appointments
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="stat-icon w-14 h-14
+                               rounded-2xl
+                               bg-indigo-100
+                               text-indigo-600
+                               flex items-center justify-center"
+                    >
+
+                        <i class="fas fa-calendar-days text-xl"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+
+            <div
+                class="stat-card dashboard-card
+                       glass rounded-2xl
+                       shadow-xl
+                       border border-white/70
+                       p-6 fade-in fade-delay-2"
+            >
+
+                <div
+                    class="flex items-center justify-between"
+                >
+
+                    <div>
+
+                        <p
+                            class="text-sm font-bold
+                                   text-slate-500
+                                   uppercase tracking-wide"
+                        >
+                            Completed
+                        </p>
+
+                        <p
+                            class="text-4xl font-extrabold
+                                   text-emerald-600 mt-3"
+                            th:text="${completedCount ?: 0}"
+                        >
+                            0
+                        </p>
+
+                        <p
+                            class="text-sm text-slate-500 mt-1"
+                        >
+                            Completed appointments
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="stat-icon w-14 h-14
+                               rounded-2xl
+                               bg-emerald-100
+                               text-emerald-600
+                               flex items-center justify-center"
+                    >
+
+                        <i class="fas fa-circle-check text-xl"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PATIENT ID -->
+
+            <div
+                class="stat-card dashboard-card
+                       glass rounded-2xl
+                       shadow-xl
+                       border border-white/70
+                       p-6 fade-in fade-delay-3"
+            >
+
+                <div
+                    class="flex items-center justify-between"
+                >
+
+                    <div>
+
+                        <p
+                            class="text-sm font-bold
+                                   text-slate-500
+                                   uppercase tracking-wide"
+                        >
+                            Patient ID
+                        </p>
+
+                        <p
+                            class="text-xl font-mono
+                                   font-extrabold
+                                   text-slate-800 mt-4"
+                            th:text="${patient.patientId}"
+                        >
+                            PAT-0001
+                        </p>
+
+                        <p
+                            class="text-sm text-slate-500 mt-1"
+                        >
+                            Your hospital identification
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="stat-icon w-14 h-14
+                               rounded-2xl
+                               bg-blue-100
+                               text-blue-600
+                               flex items-center justify-center"
+                    >
+
+                        <i class="fas fa-id-card text-xl"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             APPOINTMENT CALENDAR
+        ================================================== -->
+
+        <section
+            class="glass rounded-3xl
+                   shadow-2xl
+                   border border-white/70
+                   overflow-hidden
+                   mb-8
+                   fade-in fade-delay-4"
+        >
+
+            <!-- HEADER -->
+
+            <div
+                class="px-6 sm:px-8 py-6
+                       border-b border-slate-100
+                       flex flex-col sm:flex-row
+                       justify-between
+                       sm:items-center gap-4"
+            >
+
+                <div class="flex items-center gap-4">
+
+                    <div
+                        class="w-12 h-12 rounded-xl
+                               bg-indigo-100
+                               text-indigo-600
+                               flex items-center justify-center"
+                    >
+
+                        <i class="fas fa-calendar-check text-lg"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2
+                            class="text-xl sm:text-2xl
+                                   font-extrabold
+                                   text-slate-800"
+                        >
+                            My Appointments
+                        </h2>
+
+                        <p
+                            class="text-sm text-slate-500 mt-1"
+                        >
+                            View and manage your scheduled appointments
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="/appointment/book"
+                    class="inline-flex
+                           items-center
+                           justify-center
+                           gap-2
+                           bg-gradient-to-r
+                           from-indigo-600
+                           to-blue-600
+                           text-white
+                           px-5 py-2.5
+                           rounded-xl
+                           font-bold text-sm
+                           shadow-lg
+                           hover:-translate-y-0.5
+                           hover:shadow-xl
+                           transition-all duration-300"
+                >
+
+                    <i class="fas fa-plus"></i>
+
+                    Book Appointment
+
+                </a>
+
+            </div>
+
+
+            <!-- CALENDAR -->
+
+            <div class="p-4 sm:p-6">
+
+                <div id="calendar"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FIND HOSPITAL
+        ================================================== -->
+
+        <section
+            class="map-card glass rounded-3xl
+                   shadow-2xl
+                   border border-white/70
+                   overflow-hidden
+                   mb-8
+                   fade-in"
+        >
+
+
+            <!-- MAP HEADER -->
+
+            <div
+                class="px-6 sm:px-8 py-6
+                       border-b border-slate-100
+                       flex flex-col lg:flex-row
+                       lg:items-center
+                       lg:justify-between
+                       gap-5"
+            >
+
+                <div class="flex items-center gap-4">
+
+                    <div
+                        class="floating-location
+                               w-12 h-12 rounded-xl
+                               bg-gradient-to-br
+                               from-teal-500 to-cyan-500
+                               text-white
+                               flex items-center justify-center
+                               shadow-lg
+                               location-pulse"
+                    >
+
+                        <i class="fas fa-location-dot text-xl"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="flex items-center gap-2">
+
+                            <h2
+                                class="text-xl sm:text-2xl
+                                       font-extrabold
+                                       text-slate-800"
+                            >
+                                Find Our Hospital
+                            </h2>
+
+                            <span
+                                class="hidden sm:inline-flex
+                                       items-center gap-1
+                                       px-2.5 py-1
+                                       rounded-full
+                                       bg-teal-50
+                                       text-teal-700
+                                       text-xs font-bold"
+                            >
+
+                                <i class="fas fa-map-pin"></i>
+
+                                Location
+
+                            </span>
+
+                        </div>
+
+                        <p
+                            class="text-sm text-slate-500 mt-1"
+                        >
+                            Easily find Manas Hospital and get directions
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GOOGLE MAPS -->
+
+                <a
+                    href="https://www.google.com/maps/search/?api=1&query=Manas+Hospital"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="direction-btn
+                           inline-flex items-center
+                           justify-center gap-2
+                           px-5 py-3
+                           rounded-xl
+                           bg-gradient-to-r
+                           from-teal-500
+                           to-cyan-600
+                           text-white
+                           font-bold text-sm
+                           shadow-lg"
+                >
+
+                    <i class="fas fa-map-location-dot"></i>
+
+                    Open in Google Maps
+
+                    <i
+                        class="fas fa-arrow-up-right-from-square text-xs"
+                    ></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- MAP + DETAILS -->
+
+            <div
+                class="grid grid-cols-1 lg:grid-cols-3"
+            >
+
+
+                <!-- MAP -->
+
+                <div
+                    class="lg:col-span-2
+                           relative
+                           bg-slate-100"
+                >
+
+                    <!-- MAP LABEL -->
+
+                    <div
+                        class="map-overlay
+                               glass-soft
+                               rounded-xl
+                               px-4 py-3
+                               shadow-xl
+                               border border-white/80"
+                    >
+
+                        <div
+                            class="flex items-center gap-3"
+                        >
+
+                            <div
+                                class="w-9 h-9
+                                       rounded-lg
+                                       bg-teal-100
+                                       text-teal-600
+                                       flex items-center
+                                       justify-center"
+                            >
+
+                                <i class="fas fa-hospital"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p
+                                    class="text-xs
+                                           text-slate-500
+                                           font-medium"
+                                >
+                                    Healthcare Center
+                                </p>
+
+                                <p
+                                    class="text-sm
+                                           font-extrabold
+                                           text-slate-800"
+                                >
+                                    Manas Hospital
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- GOOGLE MAP -->
+
+                    <iframe
+                        class="map-frame"
+                        src="https://www.google.com/maps?q=Manas%20Hospital&output=embed"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Manas Hospital Location"
+                    >
+                    </iframe>
+
+                </div>
+
+
+                <!-- INFORMATION -->
+
+                <div
+                    class="p-6 sm:p-8
+                           bg-gradient-to-br
+                           from-white
+                           to-teal-50/60"
+                >
+
+                    <div
+                        class="map-info-card
+                               bg-white
+                               rounded-2xl
+                               border border-slate-100
+                               shadow-lg
+                               p-6
+                               h-full
+                               flex flex-col"
+                    >
+
+                        <!-- ICON -->
+
+                        <div
+                            class="w-14 h-14
+                                   rounded-2xl
+                                   bg-gradient-to-br
+                                   from-teal-100
+                                   to-cyan-100
+                                   text-teal-600
+                                   flex items-center
+                                   justify-center
+                                   mb-5"
+                        >
+
+                            <i
+                                class="fas fa-hospital text-2xl"
+                            ></i>
+
+                        </div>
+
+
+                        <h3
+                            class="text-xl font-extrabold
+                                   text-slate-800"
+                        >
+                            Manas Hospital
+                        </h3>
+
+
+                        <p
+                            class="text-sm
+                                   text-slate-500
+                                   mt-2
+                                   leading-relaxed"
+                        >
+                            Your healthcare destination for
+                            appointments, medical consultations
+                            and patient services.
+                        </p>
+
+
+                        <!-- DETAILS -->
+
+                        <div
+                            class="mt-6 space-y-5"
+                        >
+
+
+                            <!-- LOCATION -->
+
+                            <div
+                                class="flex items-start gap-3"
+                            >
+
+                                <div
+                                    class="w-9 h-9
+                                           shrink-0
+                                           rounded-lg
+                                           bg-teal-50
+                                           text-teal-600
+                                           flex items-center
+                                           justify-center"
+                                >
+
+                                    <i
+                                        class="fas fa-location-dot"
+                                    ></i>
+
+                                </div>
+
+                                <div>
+
+                                    <p
+                                        class="text-xs
+                                               font-bold
+                                               uppercase
+                                               tracking-wide
+                                               text-slate-400"
+                                    >
+                                        Location
+                                    </p>
+
+                                    <p
+                                        class="text-sm
+                                               font-semibold
+                                               text-slate-700
+                                               mt-1"
+                                    >
+                                        Manas Hospital
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- NAVIGATION -->
+
+                            <div
+                                class="flex items-start gap-3"
+                            >
+
+                                <div
+                                    class="w-9 h-9
+                                           shrink-0
+                                           rounded-lg
+                                           bg-blue-50
+                                           text-blue-600
+                                           flex items-center
+                                           justify-center"
+                                >
+
+                                    <i class="fas fa-route"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <p
+                                        class="text-xs
+                                               font-bold
+                                               uppercase
+                                               tracking-wide
+                                               text-slate-400"
+                                    >
+                                        Navigation
+                                    </p>
+
+                                    <p
+                                        class="text-sm
+                                               font-semibold
+                                               text-slate-700
+                                               mt-1"
+                                    >
+                                        Use Google Maps
+                                        for directions
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- APPOINTMENT -->
+
+                            <div
+                                class="flex items-start gap-3"
+                            >
+
+                                <div
+                                    class="w-9 h-9
+                                           shrink-0
+                                           rounded-lg
+                                           bg-indigo-50
+                                           text-indigo-600
+                                           flex items-center
+                                           justify-center"
+                                >
+
+                                    <i
+                                        class="fas fa-calendar-check"
+                                    ></i>
+
+                                </div>
+
+                                <div>
+
+                                    <p
+                                        class="text-xs
+                                               font-bold
+                                               uppercase
+                                               tracking-wide
+                                               text-slate-400"
+                                    >
+                                        Appointments
+                                    </p>
+
+                                    <p
+                                        class="text-sm
+                                               font-semibold
+                                               text-slate-700
+                                               mt-1"
+                                    >
+                                        Book your appointment
+                                        before visiting
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUTTON -->
+
+                        <div
+                            class="mt-auto pt-7"
+                        >
+
+                            <a
+                                href="https://www.google.com/maps/dir/?api=1&destination=Manas+Hospital"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="direction-btn
+                                       w-full
+                                       inline-flex
+                                       items-center
+                                       justify-center
+                                       gap-2
+                                       px-4 py-3
+                                       rounded-xl
+                                       bg-slate-900
+                                       hover:bg-teal-600
+                                       text-white
+                                       font-bold text-sm
+                                       transition"
+                            >
+
+                                <i
+                                    class="fas fa-diamond-turn-right"
+                                ></i>
+
+                                Get Directions
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK HELP
+        ================================================== -->
+
+        <section
+            class="grid grid-cols-1 md:grid-cols-2
+                   gap-5 mb-8"
+        >
+
+
+            <!-- BOOK -->
+
+            <a
+                href="/appointment/book"
+                class="glass rounded-2xl
+                       shadow-xl
+                       border border-white/70
+                       p-6
+                       dashboard-card"
+            >
+
+                <div
+                    class="flex items-center gap-4"
+                >
+
+                    <div
+                        class="w-12 h-12 rounded-xl
+                               bg-indigo-100
+                               text-indigo-600
+                               flex items-center
+                               justify-center"
+                    >
+
+                        <i class="fas fa-calendar-plus text-lg"></i>
+
+                    </div>
+
+                    <div class="flex-1">
+
+                        <h3
+                            class="font-bold
+                                   text-slate-800"
+                        >
+                            Need an appointment?
+                        </h3>
+
+                        <p
+                            class="text-sm
+                                   text-slate-500 mt-1"
+                        >
+                            Book a consultation with our doctors.
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fas fa-arrow-right
+                               text-slate-400"
+                    ></i>
+
+                </div>
+
+            </a>
+
+
+            <!-- DIRECTIONS -->
+
+            <a
+                href="https://www.google.com/maps/dir/?api=1&destination=Manas+Hospital"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="glass rounded-2xl
+                       shadow-xl
+                       border border-white/70
+                       p-6
+                       dashboard-card"
+            >
+
+                <div
+                    class="flex items-center gap-4"
+                >
+
+                    <div
+                        class="w-12 h-12 rounded-xl
+                               bg-teal-100
+                               text-teal-600
+                               flex items-center
+                               justify-center"
+                    >
+
+                        <i class="fas fa-location-arrow text-lg"></i>
+
+                    </div>
+
+                    <div class="flex-1">
+
+                        <h3
+                            class="font-bold
+                                   text-slate-800"
+                        >
+                            Visiting the hospital?
+                        </h3>
+
+                        <p
+                            class="text-sm
+                                   text-slate-500 mt-1"
+                        >
+                            Get directions to Manas Hospital.
+                        </p>
+
+                    </div>
+
+                    <i
+                        class="fas fa-arrow-right
+                               text-slate-400"
+                    ></i>
+
+                </div>
+
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer
+            class="text-center py-8"
+        >
+
+            <div
+                class="inline-flex
+                       items-center
+                       gap-2
+                       px-5 py-2.5
+                       rounded-full
+                       bg-white/90
+                       shadow-lg
+                       text-sm
+                       text-slate-500"
+            >
+
+                <span>
+                    Made with
+                </span>
+
+                <i
+                    class="fas fa-heart
+                           text-red-500
+                           animate-pulse"
+                ></i>
+
+                <span>
+                    for better healthcare
+                </span>
+
+                <span class="text-slate-300">
+                    •
+                </span>
+
+                <span
+                    class="font-semibold
+                           text-teal-700"
+                >
+                    Manas Hospital
+                </span>
+
+            </div>
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     FULLCALENDAR
+========================================================= -->
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const calendarElement =
+            document.getElementById('calendar');
+
+        if (!calendarElement) {
+            return;
+        }
+
+        const calendar =
+            new FullCalendar.Calendar(
+                calendarElement,
+                {
+                    initialView:
+                        window.innerWidth < 768
+                            ? 'listWeek'
+                            : 'dayGridMonth',
+
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,listWeek'
+                    },
+
+                    events: '/appointment/events',
+
+                    height: 'auto',
+
+                    dayMaxEvents: true,
+
+                    eventDisplay: 'block',
+
+                    eventTimeFormat: {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        meridiem: 'short'
+                    }
+                }
+            );
+
+        calendar.render();
+
+    });
+
+</script>
+
+
+</body>
+
+</html>

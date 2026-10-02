@@ -1,0 +1,1762 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Appointments - Manas Hospital</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet">
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        /* =========================================================
+           GLASS EFFECT
+        ========================================================= */
+
+        .glass {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .glass-soft {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* =========================================================
+           SHADOWS
+        ========================================================= */
+
+        .soft-shadow {
+            box-shadow:
+                0 20px 45px rgba(15, 23, 42, 0.12),
+                0 5px 15px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-shadow {
+            box-shadow:
+                0 10px 25px rgba(15, 23, 42, 0.09),
+                0 2px 8px rgba(15, 23, 42, 0.04);
+        }
+
+        /* =========================================================
+           ANIMATIONS
+        ========================================================= */
+
+        .smooth {
+            transition: all 0.25s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-3px);
+        }
+
+        .table-row {
+            transition:
+                background-color 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .table-row:hover {
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================= */
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        .nav-link {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -7px;
+            height: 2px;
+            background: #4f46e5;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* =========================================================
+           STAT CARDS
+        ========================================================= */
+
+        .stat-card {
+            transition: all 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 18px 35px rgba(15, 23, 42, 0.12),
+                0 4px 10px rgba(15, 23, 42, 0.05);
+        }
+
+        /* =========================================================
+           ACTION BUTTONS
+        ========================================================= */
+
+        .action-btn {
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================
+           STATUS BADGES
+        ========================================================= */
+
+        .status-badge {
+            min-width: 105px;
+            justify-content: center;
+        }
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
+
+        .table-head {
+            background: linear-gradient(
+                to right,
+                #f8fafc,
+                #f1f5f9
+            );
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 640px) {
+
+            .mobile-title {
+                font-size: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body
+    class="min-h-screen bg-slate-100"
+
+    style="
+        background-image: url('https://plus.unsplash.com/premium_photo-1775407907171-f86eafb0e85d?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1lfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    "
+>
+
+
+<!-- =========================================================
+     BACKGROUND OVERLAY
+========================================================= -->
+
+<div
+    class="fixed inset-0 bg-slate-950/40 pointer-events-none">
+</div>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav
+    class="relative z-20 bg-white/95 backdrop-blur-xl
+           border-b border-white/50 shadow-lg">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div
+            class="flex justify-between items-center
+                   min-h-16 py-2">
+
+
+            <!-- BRAND -->
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="w-11 h-11 rounded-xl
+                           bg-gradient-to-br
+                           from-teal-500 to-indigo-600
+                           flex items-center justify-center
+                           shadow-md">
+
+                    <i class="fas fa-hospital text-white text-lg"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h1
+                        class="text-xl sm:text-2xl
+                               font-bold text-slate-800
+                               tracking-tight">
+
+                        MH Admin Panel
+
+                    </h1>
+
+                    <p
+                        class="text-xs text-slate-500
+                               hidden sm:block">
+
+                        Manas Hospital Management
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAVIGATION -->
+
+            <div
+                class="flex items-center
+                       gap-1 sm:gap-5">
+
+
+                <!-- Dashboard -->
+
+                <a
+                    href="/admin/dashboard"
+
+                    class="nav-link hidden md:flex
+                           items-center gap-2
+                           text-slate-600
+                           hover:text-indigo-600
+                           font-medium px-3 py-2">
+
+                    <i class="fas fa-chart-line text-sm"></i>
+
+                    Dashboard
+
+                </a>
+
+
+                <!-- Users -->
+
+                <a
+                    href="/admin/users"
+
+                    class="nav-link hidden sm:flex
+                           items-center gap-2
+                           text-slate-600
+                           hover:text-indigo-600
+                           font-medium px-3 py-2">
+
+                    <i class="fas fa-users text-sm"></i>
+
+                    Users
+
+                </a>
+
+
+                <!-- Appointments Active -->
+
+                <a
+                    href="/admin/appointments"
+
+                    class="flex items-center gap-2
+                           text-indigo-700
+                           font-semibold
+                           bg-indigo-50
+                           border border-indigo-100
+                           px-3 sm:px-4 py-2
+                           rounded-xl
+                           shadow-sm">
+
+                    <i class="fas fa-calendar-check text-sm"></i>
+
+                    <span class="hidden sm:inline">
+                        Appointments
+                    </span>
+
+                </a>
+
+
+                <!-- Logout -->
+
+                <form
+                    th:action="@{/logout}"
+                    method="post"
+                    class="inline">
+
+                    <button
+                        type="submit"
+
+                        class="flex items-center gap-2
+                               text-red-600
+                               hover:text-red-700
+                               hover:bg-red-50
+                               font-semibold
+                               px-3 py-2
+                               rounded-xl
+                               transition">
+
+                        <i class="fas fa-sign-out-alt"></i>
+
+                        <span class="hidden sm:inline">
+                            Logout
+                        </span>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main
+    class="relative z-10
+           max-w-7xl mx-auto
+           px-4 sm:px-6 lg:px-8
+           py-6 sm:py-8">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ===================================================== -->
+
+    <section
+        class="glass
+               rounded-3xl
+               soft-shadow
+               border border-white/60
+               p-6 sm:p-8
+               mb-7">
+
+
+        <div
+            class="flex flex-col
+                   lg:flex-row
+                   lg:items-center
+                   lg:justify-between
+                   gap-6">
+
+
+            <!-- TITLE -->
+
+            <div class="flex items-start gap-4">
+
+                <div
+                    class="w-14 h-14
+                           rounded-2xl
+                           bg-gradient-to-br
+                           from-teal-100 to-indigo-100
+                           flex items-center
+                           justify-center
+                           flex-shrink-0">
+
+                    <i
+                        class="fas fa-calendar-days
+                               text-2xl
+                               text-teal-600">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <div
+                        class="flex items-center
+                               gap-2 mb-1">
+
+                        <span
+                            class="text-xs
+                                   font-semibold
+                                   uppercase
+                                   tracking-wider
+                                   text-indigo-600">
+
+                            Administration
+
+                        </span>
+
+                    </div>
+
+
+                    <h2
+                        class="mobile-title
+                               text-2xl sm:text-3xl
+                               font-bold
+                               text-slate-800">
+
+                        All Appointments
+
+                    </h2>
+
+
+                    <p
+                        class="text-slate-500
+                               mt-1">
+
+                        View and manage all patient appointments
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- BACK BUTTON -->
+
+            <a
+                href="/admin/dashboard"
+
+                class="inline-flex
+                       items-center
+                       justify-center
+                       gap-2
+
+                       bg-gradient-to-r
+                       from-indigo-600
+                       to-teal-600
+
+                       hover:from-indigo-700
+                       hover:to-teal-700
+
+                       text-white
+                       font-semibold
+
+                       px-5 py-3
+                       rounded-xl
+
+                       shadow-lg
+                       hover:shadow-xl
+
+                       smooth
+                       hover-lift">
+
+                <i class="fas fa-arrow-left text-sm"></i>
+
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         STATISTICS
+    ===================================================== -->
+
+    <section
+        class="grid grid-cols-1
+               sm:grid-cols-3
+               gap-5 mb-7">
+
+
+        <!-- TOTAL -->
+
+        <div
+            class="glass
+                   stat-card
+                   rounded-2xl
+                   card-shadow
+                   border border-white/60
+                   border-l-4 border-indigo-500
+                   p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div
+                    class="w-12 h-12
+                           rounded-xl
+                           bg-indigo-100
+                           text-indigo-600
+                           flex items-center
+                           justify-center">
+
+                    <i class="fas fa-list-check text-xl"></i>
+
+                </div>
+
+                <div>
+
+                    <p
+                        class="text-sm
+                               font-medium
+                               text-slate-500">
+
+                        Total Appointments
+
+                    </p>
+
+                    <p
+                        class="stat-number
+                               text-2xl
+                               font-bold
+                               text-slate-800
+                               mt-1"
+
+                        th:text="${#lists.size(appointments)}">
+
+                        0
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SCHEDULED -->
+
+        <div
+            class="glass
+                   stat-card
+                   rounded-2xl
+                   card-shadow
+                   border border-white/60
+                   border-l-4 border-amber-500
+                   p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div
+                    class="w-12 h-12
+                           rounded-xl
+                           bg-amber-100
+                           text-amber-600
+                           flex items-center
+                           justify-center">
+
+                    <i class="fas fa-clock text-xl"></i>
+
+                </div>
+
+
+                <div>
+
+                    <p
+                        class="text-sm
+                               font-medium
+                               text-slate-500">
+
+                        Scheduled
+
+                    </p>
+
+                    <p
+                        class="stat-number
+                               text-2xl
+                               font-bold
+                               text-slate-800
+                               mt-1"
+
+                        th:text="${#lists.size(appointments.?[status == 'SCHEDULED'])}">
+
+                        0
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div
+            class="glass
+                   stat-card
+                   rounded-2xl
+                   card-shadow
+                   border border-white/60
+                   border-l-4 border-emerald-500
+                   p-5">
+
+            <div class="flex items-center gap-4">
+
+                <div
+                    class="w-12 h-12
+                           rounded-xl
+                           bg-emerald-100
+                           text-emerald-600
+                           flex items-center
+                           justify-center">
+
+                    <i class="fas fa-circle-check text-xl"></i>
+
+                </div>
+
+
+                <div>
+
+                    <p
+                        class="text-sm
+                               font-medium
+                               text-slate-500">
+
+                        Completed
+
+                    </p>
+
+                    <p
+                        class="stat-number
+                               text-2xl
+                               font-bold
+                               text-slate-800
+                               mt-1"
+
+                        th:text="${#lists.size(appointments.?[status == 'COMPLETED'])}">
+
+                        0
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SUCCESS MESSAGE
+    ===================================================== -->
+
+    <div
+        th:if="${msg}"
+
+        class="glass
+               rounded-2xl
+               border border-emerald-200
+               bg-emerald-50/95
+               text-emerald-800
+               px-5 py-4
+               mb-6
+               flex items-center
+               gap-3
+               shadow-lg">
+
+        <div
+            class="w-10 h-10
+                   rounded-full
+                   bg-emerald-100
+                   flex items-center
+                   justify-center
+                   flex-shrink-0">
+
+            <i
+                class="fas fa-check
+                       text-emerald-600">
+            </i>
+
+        </div>
+
+        <span
+            class="font-medium"
+            th:text="${msg}">
+
+            Operation completed successfully.
+
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         APPOINTMENTS CARD
+    ===================================================== -->
+
+    <section
+        class="glass
+               rounded-3xl
+               shadow-2xl
+               overflow-hidden
+               border border-white/60">
+
+
+        <!-- CARD HEADER -->
+
+        <div
+            class="bg-gradient-to-r
+                   from-teal-600
+                   via-teal-600
+                   to-indigo-600
+
+                   px-6 py-5">
+
+
+            <div
+                class="flex flex-col
+                       sm:flex-row
+                       sm:items-center
+                       sm:justify-between
+                       gap-4">
+
+
+                <div
+                    class="flex items-center gap-3">
+
+                    <div
+                        class="w-11 h-11
+                               rounded-xl
+                               bg-white/20
+                               flex items-center
+                               justify-center
+                               border border-white/20">
+
+                        <i
+                            class="fas fa-calendar-days
+                                   text-white
+                                   text-lg">
+                        </i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h3
+                            class="text-white
+                                   font-bold
+                                   text-lg">
+
+                            Appointments List
+
+                        </h3>
+
+                        <p
+                            class="text-white/75
+                                   text-xs
+                                   mt-0.5">
+
+                            Manage patient bookings
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="hidden sm:flex
+                           items-center gap-2
+                           bg-white/15
+                           border border-white/10
+                           px-4 py-2
+                           rounded-xl">
+
+                    <i
+                        class="fas fa-shield-heart
+                               text-white/90">
+                    </i>
+
+                    <span
+                        class="text-white
+                               text-xs
+                               font-medium">
+
+                        Manas Hospital
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TABLE
+        ================================================= -->
+
+        <div
+            class="overflow-x-auto
+                   custom-scrollbar">
+
+
+            <table
+                class="w-full
+                       text-left
+                       min-w-[1100px]">
+
+
+                <!-- TABLE HEADER -->
+
+                <thead
+                    class="table-head
+                           border-b
+                           border-slate-200">
+
+
+                <tr>
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        #
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        <i
+                            class="fas fa-user-injured
+                                   mr-1.5
+                                   text-indigo-500">
+                        </i>
+
+                        Patient
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        <i
+                            class="fas fa-user-doctor
+                                   mr-1.5
+                                   text-teal-500">
+                        </i>
+
+                        Doctor
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        <i
+                            class="fas fa-calendar
+                                   mr-1.5
+                                   text-purple-500">
+                        </i>
+
+                        Date &amp; Time
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        <i
+                            class="fas fa-hourglass-half
+                                   mr-1.5
+                                   text-orange-500">
+                        </i>
+
+                        Duration
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        <i
+                            class="fas fa-tag
+                                   mr-1.5
+                                   text-emerald-500">
+                        </i>
+
+                        Status
+
+                    </th>
+
+
+                    <th
+                        class="px-5 py-4
+                               text-xs
+                               font-bold
+                               text-slate-500
+                               uppercase
+                               tracking-wider">
+
+                        Actions
+
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+
+                <!-- =================================================
+                     TABLE BODY
+                ================================================= -->
+
+                <tbody
+                    class="divide-y
+                           divide-slate-100">
+
+
+                <!-- EMPTY STATE -->
+
+                <tr
+                    th:if="${#lists.isEmpty(appointments)}">
+
+                    <td
+                        colspan="7"
+                        class="text-center
+                               py-20">
+
+
+                        <div
+                            class="flex flex-col
+                                   items-center">
+
+
+                            <div
+                                class="w-20 h-20
+                                       rounded-2xl
+                                       bg-slate-100
+                                       flex items-center
+                                       justify-center
+                                       mb-5">
+
+                                <i
+                                    class="fas fa-calendar-xmark
+                                           text-4xl
+                                           text-slate-300">
+                                </i>
+
+                            </div>
+
+
+                            <p
+                                class="text-xl
+                                       font-semibold
+                                       text-slate-500">
+
+                                No appointments found
+
+                            </p>
+
+
+                            <p
+                                class="text-sm
+                                       text-slate-400
+                                       mt-2">
+
+                                Appointments will appear here
+                                once patients start booking.
+
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+
+                <!-- =================================================
+                     APPOINTMENT ROW
+                ================================================= -->
+
+                <tr
+                    th:each="apt, iterStat : ${appointments}"
+
+                    class="table-row
+                           hover:bg-indigo-50/50">
+
+
+                    <!-- NUMBER -->
+
+                    <td
+                        class="px-5 py-5
+                               text-sm
+                               text-slate-400
+                               font-bold"
+
+                        th:text="${iterStat.count}">
+
+                        1
+
+                    </td>
+
+
+
+                    <!-- PATIENT -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <div
+                            class="flex items-center gap-3">
+
+
+                            <div
+                                class="w-11 h-11
+                                       rounded-xl
+                                       bg-indigo-100
+                                       text-indigo-700
+                                       flex items-center
+                                       justify-center
+                                       font-bold
+                                       text-sm
+                                       shadow-sm"
+
+                                th:text="${#strings.substring(apt.patient.name, 0, 1)}">
+
+                                J
+
+                            </div>
+
+
+                            <div>
+
+                                <p
+                                    class="text-sm
+                                           font-semibold
+                                           text-slate-800"
+
+                                    th:text="${apt.patient.name}">
+
+                                    John Doe
+
+                                </p>
+
+
+                                <p
+                                    class="text-xs
+                                           text-slate-500
+                                           mt-1"
+
+                                    th:text="${apt.patient.patientId}">
+
+                                    PAT-0001
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <!-- DOCTOR -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <div
+                            class="flex items-center gap-3">
+
+
+                            <div
+                                class="w-11 h-11
+                                       rounded-xl
+                                       bg-teal-100
+                                       text-teal-700
+                                       flex items-center
+                                       justify-center
+                                       font-bold
+                                       text-sm
+                                       shadow-sm"
+
+                                th:text="${#strings.substring(apt.doctor.name, 0, 1)}">
+
+                                S
+
+                            </div>
+
+
+                            <div>
+
+                                <p
+                                    class="text-sm
+                                           font-semibold
+                                           text-slate-800"
+
+                                    th:text="'Dr. ' + ${apt.doctor.name}">
+
+                                    Dr. Sarah
+
+                                </p>
+
+
+                                <p
+                                    class="text-xs
+                                           text-slate-500
+                                           mt-1"
+
+                                    th:text="${apt.doctor.email}">
+
+                                    doctor@hospital.com
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <!-- DATE & TIME -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <div
+                            class="flex flex-col">
+
+
+                            <p
+                                class="text-sm
+                                       font-semibold
+                                       text-slate-800"
+
+                                th:text="${#temporals.format(apt.startTime, 'dd MMM yyyy')}">
+
+                                15 Apr 2025
+
+                            </p>
+
+
+                            <p
+                                class="text-xs
+                                       text-slate-500
+                                       mt-1"
+
+                                th:text="${#temporals.format(apt.startTime, 'hh:mm a')}">
+
+                                10:30 AM
+
+                            </p>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <!-- DURATION -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <span
+                            class="inline-flex
+                                   items-center
+                                   gap-2
+                                   text-sm
+                                   text-slate-600
+                                   bg-slate-100
+                                   px-3 py-1.5
+                                   rounded-lg">
+
+                            <i
+                                class="fas fa-clock
+                                       text-slate-400">
+                            </i>
+
+                            30 mins
+
+                        </span>
+
+                    </td>
+
+
+
+                    <!-- STATUS -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <span
+                            class="status-badge
+                                   inline-flex
+                                   items-center
+                                   gap-2
+                                   px-3 py-1.5
+                                   rounded-full
+                                   text-xs
+                                   font-bold"
+
+                            th:classappend="
+
+                                ${apt.status == 'SCHEDULED'} ?
+
+                                'bg-amber-100 text-amber-800 border border-amber-200' :
+
+                                (${apt.status == 'COMPLETED'} ?
+
+                                'bg-emerald-100 text-emerald-800 border border-emerald-200' :
+
+                                'bg-red-100 text-red-800 border border-red-200')
+
+                            "
+
+                            th:text="${apt.status}">
+
+                            SCHEDULED
+
+                        </span>
+
+                    </td>
+
+
+
+                    <!-- ACTIONS -->
+
+                    <td
+                        class="px-5 py-5">
+
+
+                        <div
+                            class="flex items-center gap-2">
+
+
+                            <!-- COMPLETE -->
+
+                            <form
+                                th:action="@{'/admin/appointments/' + ${apt.id} + '/complete'}"
+
+                                method="post"
+
+                                class="inline"
+
+                                th:if="${apt.status == 'SCHEDULED'}">
+
+
+                                <button
+                                    type="submit"
+
+                                    class="action-btn
+                                           inline-flex
+                                           items-center
+                                           gap-1.5
+
+                                           bg-emerald-50
+                                           text-emerald-700
+
+                                           hover:bg-emerald-600
+                                           hover:text-white
+
+                                           px-3 py-2
+                                           rounded-lg
+
+                                           text-xs
+                                           font-semibold
+
+                                           border
+                                           border-emerald-200"
+
+                                    title="Mark as Completed">
+
+
+                                    <i
+                                        class="fas fa-check">
+                                    </i>
+
+                                    Complete
+
+                                </button>
+
+                            </form>
+
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                th:action="@{'/admin/appointments/' + ${apt.id} + '/delete'}"
+
+                                method="post"
+
+                                class="inline">
+
+
+                                <button
+                                    type="submit"
+
+                                    onclick="return confirm('Are you sure you want to delete this appointment?')"
+
+                                    class="action-btn
+                                           inline-flex
+                                           items-center
+                                           gap-1.5
+
+                                           bg-red-50
+                                           text-red-600
+
+                                           hover:bg-red-600
+                                           hover:text-white
+
+                                           px-3 py-2
+                                           rounded-lg
+
+                                           text-xs
+                                           font-semibold
+
+                                           border
+                                           border-red-200"
+
+                                    title="Delete Appointment">
+
+
+                                    <i
+                                        class="fas fa-trash-alt">
+                                    </i>
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             TABLE FOOTER
+        ===================================================== -->
+
+        <div
+            class="px-6 py-4
+                   bg-slate-50/90
+                   border-t border-slate-200
+
+                   flex flex-col
+                   sm:flex-row
+                   items-center
+                   justify-between
+                   gap-3">
+
+
+            <div
+                class="flex items-center
+                       gap-2">
+
+                <div
+                    class="w-8 h-8
+                           rounded-lg
+                           bg-indigo-100
+                           text-indigo-600
+                           flex items-center
+                           justify-center">
+
+                    <i class="fas fa-calendar-check text-xs"></i>
+
+                </div>
+
+
+                <p
+                    class="text-sm
+                           text-slate-500">
+
+                    Showing
+
+                    <span
+                        class="font-bold
+                               text-slate-700"
+
+                        th:text="${#lists.size(appointments)}">
+
+                        0
+
+                    </span>
+
+                    appointments
+
+                </p>
+
+            </div>
+
+
+            <a
+                href="/admin/dashboard"
+
+                class="inline-flex
+                       items-center
+                       gap-2
+
+                       text-sm
+                       text-indigo-600
+                       hover:text-indigo-800
+
+                       font-semibold
+
+                       px-3 py-2
+                       rounded-lg
+
+                       hover:bg-indigo-50
+
+                       transition">
+
+                <i class="fas fa-arrow-left"></i>
+
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+    ===================================================== -->
+
+    <section
+        class="grid grid-cols-1
+               sm:grid-cols-2
+               gap-5
+               mt-7">
+
+
+        <!-- DASHBOARD -->
+
+        <a
+            href="/admin/dashboard"
+
+            class="glass-soft
+                   group
+                   rounded-2xl
+                   p-5
+                   border border-white/50
+                   shadow-lg
+                   hover:shadow-xl
+                   transition
+                   hover:-translate-y-1">
+
+
+            <div
+                class="flex items-center gap-4">
+
+
+                <div
+                    class="w-12 h-12
+                           rounded-xl
+                           bg-indigo-100
+                           text-indigo-600
+                           flex items-center
+                           justify-center
+
+                           group-hover:bg-indigo-600
+                           group-hover:text-white
+
+                           transition">
+
+                    <i
+                        class="fas fa-chart-pie
+                               text-xl">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <h3
+                        class="font-bold
+                               text-slate-800">
+
+                        Admin Dashboard
+
+                    </h3>
+
+
+                    <p
+                        class="text-sm
+                               text-slate-500
+                               mt-1">
+
+                        View hospital statistics and overview
+
+                    </p>
+
+                </div>
+
+
+                <i
+                    class="fas fa-chevron-right
+                           ml-auto
+                           text-slate-300
+                           group-hover:text-indigo-600
+                           transition">
+                </i>
+
+            </div>
+
+        </a>
+
+
+
+        <!-- USERS -->
+
+        <a
+            href="/admin/users"
+
+            class="glass-soft
+                   group
+                   rounded-2xl
+                   p-5
+                   border border-white/50
+                   shadow-lg
+                   hover:shadow-xl
+                   transition
+                   hover:-translate-y-1">
+
+
+            <div
+                class="flex items-center gap-4">
+
+
+                <div
+                    class="w-12 h-12
+                           rounded-xl
+                           bg-teal-100
+                           text-teal-600
+                           flex items-center
+                           justify-center
+
+                           group-hover:bg-teal-600
+                           group-hover:text-white
+
+                           transition">
+
+                    <i
+                        class="fas fa-users
+                               text-xl">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <h3
+                        class="font-bold
+                               text-slate-800">
+
+                        Manage Users
+
+                    </h3>
+
+
+                    <p
+                        class="text-sm
+                               text-slate-500
+                               mt-1">
+
+                        Manage doctors, patients and administrators
+
+                    </p>
+
+                </div>
+
+
+                <i
+                    class="fas fa-chevron-right
+                           ml-auto
+                           text-slate-300
+                           group-hover:text-teal-600
+                           transition">
+                </i>
+
+            </div>
+
+        </a>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
+
+    <footer
+        class="text-center
+               py-8">
+
+
+        <p
+            class="text-white
+                   text-sm
+                   font-medium">
+
+            Made with
+
+            <i
+                class="fas fa-heart
+                       text-red-400
+                       mx-1">
+            </i>
+
+            for better healthcare
+
+        </p>
+
+
+        <p
+            class="text-white/60
+                   text-xs
+                   mt-2">
+
+            Manas Hospital • Admin Management System
+
+        </p>
+
+    </footer>
+
+</main>
+
+</body>
+</html>

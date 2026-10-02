@@ -1,227 +1,661 @@
+# 🏥 Manas Hospital Management System
 
+### A Full-Stack Hospital Management System built with Java, Spring Boot, MySQL and Thymeleaf
 
-# Hospital Management System (HMS)
-**A Production-Ready, Full-Stack Hospital Management System Built with Modern Java Technologies**
+**Manas Hospital Management System (HMS)** is a web-based hospital management application developed to digitize and simplify common hospital operations such as patient registration, authentication, doctor management, appointment booking, and administrative user management.
 
----
+The project follows a **layered Spring Boot architecture** with role-based access control for **Patients, Doctors, and Administrators**. It uses **Spring Data JPA/Hibernate** for database persistence, **Spring Security** for authentication and authorization, and **Thymeleaf + Tailwind CSS** for the user interface.
 
-## 🏥 What This Project Solves
-
-This Hospital Management System addresses real-world healthcare challenges by digitizing and streamlining hospital operations. It replaces paper-based processes with an efficient digital platform that reduces administrative overhead by 40% and improves patient experience through seamless appointment booking and management.
-
----
-
-## 🌟 Key Features & Business Value
-
-### For Patients
-- **Seamless Registration**: Quick account creation with email verification
-- **Smart Appointment Booking**: Real-time availability checking with instant confirmation
-- **Personal Health Dashboard**: Centralized view of all appointments and medical history
-- **Automated Reminders**: Email notifications for upcoming appointments
-
-### For Doctors
-- **Intelligent Schedule Management**: Color-coded calendar with conflict detection
-- **Patient Information Access**: Secure, role-based access to patient records
-- **Appointment Status Tracking**: Real-time updates from booking to completion
-- **Digital Notes System**: Securely store consultation notes and treatment plans
-
-### For Administrators
-- **Comprehensive User Management**: Create and manage all user roles with granular permissions
-- **Operational Analytics**: Visual dashboards showing key hospital metrics
-- **System Configuration**: Flexible settings to adapt to different hospital workflows
-- **Audit Trails**: Complete logging of all system activities for compliance
+The application has also been **containerized with Docker and deployed on Railway**, making it accessible as a live web application.
 
 ---
 
-## 💻 Technical Architecture
+## 🚀 Live Application
 
-### Enterprise-Grade Backend
-- **Spring Boot 3**: Leverages the latest Spring framework for robust, scalable backend services
-- **Java 21**: Utilizes modern Java features including virtual threads for improved concurrency
-- **Layered Architecture**: Clean separation of concerns with Controller, Service, and Repository layers
-- **RESTful APIs**: Well-designed endpoints following REST principles with proper HTTP methods
+🌐 **Live Website:**
+https://manas-hospital-production.up.railway.app/
 
-### Secure & Scalable Database
-- **PostgreSQL**: Production-grade database with ACID compliance for data integrity
-- **Optimized Schema**: Normalized database design with proper indexing for performance
-- **Data Relationships**: Complex entity relationships with proper cascade operations
-- **Connection Pooling**: HikariCP for efficient database connection management
-
-### Modern Frontend Experience
-- **Thymeleaf Templates**: Server-side rendered pages with dynamic content
-- **Tailwind CSS**: Utility-first CSS framework for responsive, modern UI
-- **FullCalendar.js**: Interactive calendar component with drag-and-drop functionality
-- **Progressive Enhancement**: Works without JavaScript, enhanced with it when available
-
-### Enterprise Security
-- **Spring Security**: Industry-standard authentication and authorization framework
-- **Role-Based Access Control**: Granular permissions for different user types
-- **Password Security**: BCrypt hashing for secure password storage
-- **CSRF Protection**: Cross-site request forgery protection for all state-changing operations
+💻 **GitHub Repository:**
+https://github.com/chandugon/manas-hospital
 
 ---
 
-## 🚀 Deployment & DevOps
+# 🎯 Project Objective
 
-### Containerization
-- **Docker**: Complete containerization with multi-stage builds for optimized images
-- **Docker Compose**: Orchestrates application and database services together
-- **Environment Configuration**: Flexible configuration for development, testing, and production
+The main objective of this project is to provide a centralized digital platform for managing hospital users and appointments.
 
-### Automated Operations
-- **Database Initialization**: Automatic schema creation with sample data
-- **Health Checks**: Spring Boot Actuator endpoints for monitoring application health
-- **Logging Framework**: Structured logging with different levels for debugging and monitoring
+The system replaces manual appointment and user-management workflows with a web-based application where:
 
----
-
-## 📊 Project Metrics & Achievements
-
-- **Code Quality**: 90%+ test coverage with comprehensive unit and integration tests
-- **Performance**: Sub-200ms response times for all critical operations
-- **Security**: Zero known vulnerabilities (verified with OWASP dependency check)
-- **Accessibility**: WCAG 2.1 AA compliant UI components
-- **Browser Support**: Tested on Chrome, Firefox, Safari, and Edge (latest 2 versions)
-- **Mobile Responsive**: Fully functional on mobile devices with touch-optimized interface
+* Patients can register and book appointments.
+* Doctors can view their scheduled appointments.
+* Administrators can manage users.
+* Different user roles receive different access permissions.
+* Appointment data is persisted in a relational MySQL database.
+* Authentication and authorization are handled through Spring Security.
 
 ---
 
-## 🔧 Technical Implementation Details
+# ⭐ Key Features
 
-### Database Schema
-```
-Users (id, email, password, role, created_at)
-├── Patients (user_id, first_name, last_name, date_of_birth, phone)
-├── Doctors (user_id, first_name, last_name, specialization, license_number)
-└── Appointments (id, patient_id, doctor_id, appointment_date, status, notes)
+## 👤 Patient Module
+
+* Patient registration and login
+* Secure authentication
+* Patient dashboard
+* Appointment booking
+* Doctor selection while booking
+* Appointment date and time selection
+* Appointment history
+* Calendar-based appointment view
+* Role-based access to patient functionality
+
+### Appointment Flow
+
+```text
+Patient Login
+     ↓
+Patient Dashboard
+     ↓
+Select Doctor
+     ↓
+Select Date & Time
+     ↓
+Create Appointment
+     ↓
+Appointment Stored in MySQL
+     ↓
+Patient / Doctor Appointment View
 ```
 
-### Security Implementation
-- Custom UserDetailsService with JPA integration
-- Method-level security with @PreAuthorize annotations
-- Session management with concurrent session control
-- Password policy enforcement with custom validators
+---
 
-### API Design
-- Consistent error handling with custom exception classes
-- Global exception handling with @ControllerAdvice
-- Request validation using Bean Validation annotations
-- OpenAPI 3.0 documentation with SpringDoc
+## 👨‍⚕️ Doctor Module
+
+The system supports multiple doctors with separate accounts.
+
+Current doctor accounts include:
+
+* **Dr. Madhav Gonge**
+* **Dr. Sandhya Gonge**
+
+Doctor functionality includes:
+
+* Secure doctor login
+* Doctor-specific dashboard
+* View scheduled appointments
+* View patient appointment information
+* Appointment calendar
+* Role-based access control
+
+Doctors can only access functionality permitted to the `DOCTOR` role.
 
 ---
 
-## 🎯 Why Recruiters Should Take Notice
+## 👨‍💼 Admin Module
 
-| What Top Companies Look For | How This Project Delivers |
-|-----------------------------|---------------------------|
-| **Full-Stack Development** | Complete implementation from database to UI |
-| **Modern Tech Stack** | Latest Spring Boot 3, Java 21, and PostgreSQL |
-| **Security-First Approach** | Robust authentication and authorization |
-| **Production-Ready Code** | Proper error handling, logging, and monitoring |
-| **Clean Architecture** | Well-structured code with clear separation of concerns |
-| **Testing Excellence** | Comprehensive test coverage with multiple testing strategies |
-| **Deployment Knowledge** | Docker containerization and production deployment |
-| **Problem-Solving Skills** | Real-world solution to healthcare management challenges |
+The administrator has access to administrative functionality for managing the hospital system.
 
----
+Features include:
 
-## 🏆 Technical Challenges Overcome
+* Admin authentication
+* User management
+* View registered users
+* Manage patient accounts
+* Manage doctor accounts
+* Role-based administrative access
+* Appointment-related administration
 
-1. **Complex Scheduling Logic**: Implemented conflict detection for doctor appointments with timezone support
-2. **Secure Data Access**: Designed role-based access control that prevents data leakage between user types
-3. **Responsive Calendar**: Created a mobile-friendly calendar interface that works across all devices
-4. **Database Performance**: Optimized queries with proper indexing and connection pooling
-5. **State Management**: Managed complex application state across multiple user sessions
+Administrative endpoints are protected using Spring Security authorization.
 
 ---
 
-## 📈 Scalability Considerations
+# 🛠️ Technology Stack
 
-- **Horizontal Scaling**: Stateless application design allows for multiple instances behind a load balancer
-- **Database Optimization**: Query optimization and connection pooling for handling increased load
-- **Caching Strategy**: Implemented caching for frequently accessed data to reduce database load
-- **Async Processing**: Non-blocking operations for improved responsiveness under load
+## Backend
 
----
-
-## 🛠️ Development Process
-
-- **Agile Methodology**: Iterative development with regular feature additions
-- **Version Control**: Git with feature branches and pull requests
-- **Code Reviews**: All changes reviewed for quality and security
-- **Continuous Integration**: Automated testing and build processes
-- **Documentation**: Comprehensive inline documentation and external guides
+| Technology          | Purpose                                    |
+| ------------------- | ------------------------------------------ |
+| **Java 21**         | Core programming language                  |
+| **Spring Boot 4**   | Backend application framework              |
+| **Spring MVC**      | Web request and controller handling        |
+| **Spring Data JPA** | Database persistence                       |
+| **Hibernate**       | ORM implementation                         |
+| **Spring Security** | Authentication and authorization           |
+| **Maven**           | Dependency management and build automation |
+| **Lombok**          | Reducing boilerplate Java code             |
 
 ---
 
-## 🚀 Getting Started
+## Database
 
-### Quick Start (No Technical Knowledge Required)
+### MySQL
 
-1. Download the project files from the GitHub repository
-2. Extract the ZIP folder to your preferred location
-3. Double-click the appropriate file for your operating system:
-    - Windows: `RUN_ME.bat`
-    - Mac/Linux: `RUN_ME.sh`
-4. Wait approximately 60 seconds while the system initializes
-5. Your browser will open automatically at http://localhost:8080
+The application uses **MySQL** as its relational database.
 
-### Docker Deployment (Production Ready)
+Main entities include:
 
-For a production-like environment, run:
+```text
+User
+ ├── Patient
+ ├── Doctor
+ └── Appointment
+```
+
+The application uses JPA entity relationships to connect users, patients, doctors and appointments.
+
+Hibernate is responsible for mapping Java entities to database tables.
+
+---
+
+## Frontend
+
+| Technology          | Purpose                        |
+| ------------------- | ------------------------------ |
+| **Thymeleaf**       | Server-side HTML rendering     |
+| **HTML5**           | Page structure                 |
+| **Tailwind CSS**    | Responsive UI styling          |
+| **JavaScript**      | Client-side interactions       |
+| **FullCalendar.js** | Appointment calendar interface |
+| **Font Awesome**    | UI icons                       |
+
+The frontend uses Thymeleaf to dynamically display authenticated user information and appointment data received from Spring Boot controllers.
+
+---
+
+# 🔐 Security Architecture
+
+Security is implemented using **Spring Security** with role-based authorization.
+
+### Authentication
+
+Users authenticate using their registered email and password.
+
+Passwords are protected using **BCrypt password hashing** rather than storing plain-text passwords.
+
+### Authorization
+
+The application separates functionality using roles such as:
+
+```text
+PATIENT
+DOCTOR
+ADMIN
+```
+
+Administrative functionality is protected using method-level authorization such as:
+
+```java
+@PreAuthorize("hasRole('ADMIN')")
+```
+
+This prevents unauthorized users from accessing administrative operations.
+
+---
+
+# 🏗️ Application Architecture
+
+The project follows a layered architecture:
+
+```text
+                    ┌─────────────────────┐
+                    │      Browser        │
+                    │ Thymeleaf / HTML UI │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    Controllers      │
+                    │  HTTP Request Layer │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │     Services        │
+                    │ Business Logic      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Repositories      │
+                    │ Spring Data JPA     │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │       MySQL         │
+                    │     Database        │
+                    └─────────────────────┘
+```
+
+### Main package structure
+
+```text
+com.hms.hospital
+│
+├── config
+│   └── DataInitializer
+│
+├── controller
+│   ├── AdminController
+│   ├── AppointmentController
+│   └── ...
+│
+├── entity
+│   ├── User
+│   ├── Patient
+│   ├── Appointment
+│   └── Role
+│
+├── repository
+│   ├── UserRepository
+│   ├── PatientRepository
+│   └── AppointmentRepository
+│
+└── service
+    └── PatientService
+```
+
+This separation keeps controllers, business logic, persistence and configuration responsibilities organized.
+
+---
+
+# 📅 Appointment Management
+
+Appointments are represented using an `Appointment` entity containing information such as:
+
+```text
+Appointment
+├── Patient
+├── Doctor
+├── Start Time
+├── End Time
+├── Title
+└── Status
+```
+
+When a patient books an appointment:
+
+1. The authenticated patient is identified.
+2. The selected doctor is retrieved.
+3. The requested date and time are converted into `LocalDateTime`.
+4. The appointment duration is calculated.
+5. The appointment is assigned a `SCHEDULED` status.
+6. The appointment is saved through `AppointmentRepository`.
+7. The appointment becomes available in the relevant appointment views.
+
+---
+
+# 🗄️ Database Design
+
+The core database relationships can be represented as:
+
+```text
+                    USERS
+                      │
+             ┌────────┴────────┐
+             │                 │
+             ▼                 ▼
+         PATIENTS           DOCTORS
+             │                 │
+             │                 │
+             └───────┬─────────┘
+                     │
+                     ▼
+               APPOINTMENTS
+```
+
+The application uses Hibernate/JPA to manage persistence and relationships between these entities.
+
+---
+
+# ⚙️ Configuration
+
+The application uses Spring Boot configuration through:
+
+```text
+application.properties
+```
+
+Important configuration areas include:
+
+```properties
+spring.datasource.url
+spring.datasource.username
+spring.datasource.password
+
+spring.jpa.hibernate.ddl-auto
+
+server.port
+```
+
+For deployment, database configuration can be supplied through environment variables instead of hard-coding production credentials.
+
+---
+
+# 🐳 Docker & Deployment
+
+The project includes Docker-based deployment support.
+
+### Docker workflow
+
+```text
+Source Code
+     ↓
+Maven Build
+     ↓
+Spring Boot JAR
+     ↓
+Docker Image
+     ↓
+Railway Deployment
+     ↓
+Live Application
+```
+
+The application is deployed using **Railway** and runs as a production web application.
+
+### Production URL
+
+https://manas-hospital-production.up.railway.app/
+
+---
+
+# 🔄 Git & Version Control
+
+Git is used for source-code management.
+
+Development workflow:
+
+```text
+Local Development
+       ↓
+Git
+       ↓
+Commit
+       ↓
+GitHub
+       ↓
+Docker Build
+       ↓
+Railway Deployment
+```
+
+The project repository is available at:
+
+https://github.com/chandugon/manas-hospital
+
+---
+
+# 🧪 Development & Problem Solving
+
+During development, several real-world application problems were addressed, including:
+
+### 1. Role-Based Login
+
+Implemented separate access flows for:
+
+```text
+Patient
+Doctor
+Admin
+```
+
+### 2. Appointment Relationships
+
+Connected patients and doctors through appointment records using JPA relationships.
+
+### 3. Appointment Calendar
+
+Integrated calendar-based appointment viewing to make scheduled appointments easier to understand.
+
+### 4. Authentication & Authorization
+
+Protected application functionality based on authenticated user roles.
+
+### 5. Production Deployment
+
+Configured the Spring Boot application for Docker-based deployment and deployed it to Railway.
+
+### 6. Database Integration
+
+Connected the Spring Boot application to MySQL using:
+
+```text
+Spring Data JPA
+        +
+Hibernate
+        +
+MySQL
+```
+
+---
+
+# 💻 Running the Project Locally
+
+## Prerequisites
+
+Install:
+
+* Java 21
+* Maven
+* MySQL
+* Git
+* Docker *(optional)*
+
+---
+
+## 1. Clone the Repository
+
 ```bash
-docker-compose up --build
+git clone https://github.com/chandugon/manas-hospital.git
 ```
-This will start both the application and PostgreSQL database in isolated containers.
+
+```bash
+cd manas-hospital
+```
 
 ---
 
-## 🔐 Default Login Information
+## 2. Configure MySQL
 
-To explore the system's capabilities, use these pre-configured accounts:
+Create a database:
 
-| Role | Email | Password | Access Level |
-|------|-------|----------|--------------|
-| Administrator | admin@hospital.com | password | Full system access |
-| Doctor | sarah@hospital.com | password | Patient management and scheduling |
-| Patient | Register at `/register` | Your choice | Personal appointment management |
+```sql
+CREATE DATABASE hospitaldb;
+```
 
----
+Update the database configuration in:
 
-## 📸 Visual Tour
+```text
+src/main/resources/application.properties
+```
 
-| Feature | Screenshot | Key Functionality |
-|---------|------------|-------------------|
-| Login Page | ![Login](image/login.png) | Secure authentication with role detection |
-| Patient Registration | ![Register](image/register.png) | Form validation and email verification |
-| Patient Dashboard | ![Patient Dashboard](image/patient-dashboard.png) | Appointment history and booking interface |
-| Booking Appointments | ![Book Appointment](image/book-appointment.png) | Real-time availability checking |
-| Doctor Schedule | ![Doctor Dashboard](image/doctor-dashboard.png) | Calendar view with appointment details |
-| Admin Panel | ![Admin Users](image/admin-users.png) | User management and system configuration |
+Example:
 
----
-
-## 📞 Connect With Me
-
-**Rajeev Nayan**  
-Full-Stack Java Developer | Spring Boot Expert | Clean Code Enthusiast
-
-📧 Email: imrajeevnayan@gmail.com  
-💼 LinkedIn: https://www.linkedin.com/in/imrajeevnayan  
-🐙 GitHub: github.com/imrajeevnayan
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/hospitaldb
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD
+```
 
 ---
 
-## 🤝 Need Assistance?
+## 3. Build the Application
 
-If you encounter any issues or have questions about the project:
+Using Maven:
 
-1. Check the [GitHub Issues](https://github.com/yourname/hms/issues) page for known problems
-2. Contact me directly at imrajeevnayan@gmail.com
-3. Explore the interactive API documentation at http://localhost:8080/swagger-ui.html (after running the application)
+```bash
+mvn clean install
+```
 
 ---
 
-**This Hospital Management System represents my commitment to building production-ready applications that solve real-world problems. It demonstrates not just technical proficiency, but an understanding of business needs, user experience, and the importance of clean, maintainable code.**
+## 4. Run the Application
 
-**I'm passionate about creating software that makes a difference, and I'm excited to bring this same level of dedication and expertise to your team.**
+```bash
+mvn spring-boot:run
+```
+
+The application will run on:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# 🔑 Demo Accounts
+
+## Administrator
+
+```text
+Email: admin@hospital.com
+Role: ADMIN
+```
+
+## Doctor
+
+```text
+Email: madhav@hospital.com
+Role: DOCTOR
+```
+
+## Doctor
+
+```text
+Email: sandhya@hospital.com
+Role: DOCTOR
+```
+
+> Passwords should be configured according to the current application/database configuration. Do not commit production credentials or database passwords to GitHub.
+
+---
+
+# 📸 Main Application Modules
+
+The project contains interfaces for:
+
+* 🔐 Login
+* 📝 Patient Registration
+* 👤 Patient Dashboard
+* 📅 Appointment Booking
+* 🗓️ Appointment Calendar
+* 👨‍⚕️ Doctor Dashboard
+* 👨‍💼 Admin Panel
+* 👥 User Management
+
+---
+
+# 📈 Future Improvements
+
+Potential improvements for future versions include:
+
+* Email notifications for appointments
+* SMS appointment reminders
+* Online medical-record management
+* Doctor availability management
+* Advanced appointment conflict detection
+* REST API documentation
+* Automated unit and integration testing
+* CI/CD pipeline
+* Application monitoring
+* Advanced reporting and analytics
+
+---
+
+# 👨‍💻 About Me
+
+## Chandrashekhar Gonge
+
+**Java Developer | Spring Boot Developer | Full-Stack Developer**
+
+I developed the **Manas Hospital Management System** to demonstrate practical experience in backend development, database integration, authentication, authorization, web application development and cloud deployment.
+
+The project gave me hands-on experience working with:
+
+* Java 21
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+* Hibernate
+* MySQL
+* Thymeleaf
+* Tailwind CSS
+* JavaScript
+* Maven
+* Git & GitHub
+* Docker
+* Railway
+
+### Connect With Me
+
+📧 **Email:** [chandrashekhargonge7@gmail.com](mailto:chandrashekhargonge7@gmail.com)
+
+💼 **LinkedIn:**
+https://www.linkedin.com/in/chandrashekhar-gonge-539b6420a/
+
+🐙 **GitHub:**
+https://github.com/chandugon
+
+---
+
+# 📌 Project Highlights
+
+| Area             | Implementation                  |
+| ---------------- | ------------------------------- |
+| Language         | Java 21                         |
+| Backend          | Spring Boot 4                   |
+| Security         | Spring Security + BCrypt        |
+| Authorization    | Role-Based Access Control       |
+| Database         | MySQL                           |
+| ORM              | Hibernate / JPA                 |
+| Frontend         | Thymeleaf + HTML + Tailwind CSS |
+| Calendar         | FullCalendar.js                 |
+| Build Tool       | Maven                           |
+| Version Control  | Git / GitHub                    |
+| Containerization | Docker                          |
+| Deployment       | Railway                         |
+| Architecture     | Layered Architecture            |
+
+---
+
+# ⭐ Project Summary
+
+**Manas Hospital Management System** demonstrates the development of a complete web application using modern Java technologies.
+
+The project covers the complete development lifecycle:
+
+```text
+Requirement
+    ↓
+Application Design
+    ↓
+Java / Spring Boot Development
+    ↓
+Database Integration
+    ↓
+Security Implementation
+    ↓
+Frontend Development
+    ↓
+Testing & Debugging
+    ↓
+Dockerization
+    ↓
+GitHub Version Control
+    ↓
+Cloud Deployment
+```
+
+The project demonstrates practical understanding of **object-oriented programming, Spring Boot application development, relational database management, authentication and authorization, MVC architecture, Git version control, Docker and cloud deployment**.
+
+---
+
+## 📞 Contact
+
+If you would like to discuss this project or my development experience:
+
+**Chandrashekhar Gonge**
+📧 [chandrashekhargonge7@gmail.com](mailto:chandrashekhargonge7@gmail.com)
+💼 LinkedIn: https://www.linkedin.com/in/chandrashekhar-gonge-539b6420a/
+🐙 GitHub: https://github.com/chandugon
